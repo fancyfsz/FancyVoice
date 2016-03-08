@@ -5,13 +5,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
-import android.support.v4.app.Fragment;
+
 import com.iflytek.cloud.ErrorCode;
 import com.iflytek.cloud.InitListener;
 import com.iflytek.cloud.SpeechConstant;
@@ -22,7 +23,6 @@ import com.iflytek.cloud.SpeechUnderstanderListener;
 import com.iflytek.cloud.SpeechUtility;
 import com.iflytek.cloud.SynthesizerListener;
 import com.iflytek.cloud.UnderstanderResult;
-import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -31,7 +31,7 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends SlidingFragmentActivity implements View.OnClickListener{
+public class MainActivity extends Activity implements View.OnClickListener{
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -77,7 +77,7 @@ public class MainActivity extends SlidingFragmentActivity implements View.OnClic
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         //加载布局
         setContentView(R.layout.activity_main);
-        initSlidingMenu(savedInstanceState);
+        //initSlidingMenu(savedInstanceState);
         initLayout();
         //初始化对象
         speechUnderstander = SpeechUnderstander.createUnderstander(MainActivity.this, speechUdrInitListener);
@@ -97,12 +97,12 @@ public class MainActivity extends SlidingFragmentActivity implements View.OnClic
     }
 
     //初始化侧边栏(点击设置按钮出现的滑动侧边栏效果)
-    private void initSlidingMenu(Bundle savedInstanceState) {
-        if(savedInstanceState != null){
-            fragment = getSupportFragmentManager().getFragment(savedInstanceState,"fragment");
-        }
-
-    }
+//    private void initSlidingMenu(Bundle savedInstanceState) {
+//        if(savedInstanceState != null){
+//            fragment = getSupportFragmentManager().getFragment(savedInstanceState,"fragment");
+//        }
+//
+//    }
 
 
 
