@@ -15,7 +15,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:lines="1"
+        android:background="@drawable/frame"
         />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp">
+    </View>
     <EditText
         android:id="@+id/pwd"
         android:password="true"
@@ -23,6 +28,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:lines="1"
+        android:background="@drawable/frame"
         />
     <Button
         android:id="@+id/login_btn"
@@ -33,8 +39,8 @@
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
         android:layout_marginTop="10dp"
-        android:background="@color/lightblue"
+        android:background="@color/darkgreen"
         android:layout_gravity="center_horizontal"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 </LinearLayout>
