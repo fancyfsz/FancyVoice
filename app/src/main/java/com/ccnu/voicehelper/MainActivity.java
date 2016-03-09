@@ -1,11 +1,9 @@
 package com.ccnu.voicehelper;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -23,6 +21,7 @@ import com.iflytek.cloud.SpeechUnderstanderListener;
 import com.iflytek.cloud.SpeechUtility;
 import com.iflytek.cloud.SynthesizerListener;
 import com.iflytek.cloud.UnderstanderResult;
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -39,7 +38,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
     private ImageButton voice_btn = null;
     private ImageButton setting_btn = null;
     private List<Msg> msgList = new ArrayList<Msg>();
-    private Fragment fragment;
+    private SlidingMenu slidingMenu;
     /*
       *  module one:a speech recognizer(ASR)
       *  module two: natural language understanding
@@ -77,7 +76,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         //加载布局
         setContentView(R.layout.activity_main);
-        //initSlidingMenu(savedInstanceState);
+        initSlidingMenu();
         initLayout();
         //初始化对象
         speechUnderstander = SpeechUnderstander.createUnderstander(MainActivity.this, speechUdrInitListener);
@@ -97,12 +96,19 @@ public class MainActivity extends Activity implements View.OnClickListener{
     }
 
     //初始化侧边栏(点击设置按钮出现的滑动侧边栏效果)
-//    private void initSlidingMenu(Bundle savedInstanceState) {
-//        if(savedInstanceState != null){
-//            fragment = getSupportFragmentManager().getFragment(savedInstanceState,"fragment");
-//        }
-//
-//    }
+    private void initSlidingMenu() {
+
+        slidingMenu = new SlidingMenu(this);
+        //设置菜单模式
+        slidingMenu.setMode(SlidingMenu.LEFT_RIGHT);
+        slidingMenu.setMenu(R.layout.help_fragment);
+        slidingMenu.setSecondaryMenu(R.layout.setting_fragment);
+        slidingMenu.attachToActivity(this,SlidingMenu.SLIDING_CONTENT);
+        slidingMenu.setShadowWidth(10);
+        slidingMenu.setShadowWidthRes(R.dimen.shadow_width);
+        slidingMenu.setBehindOffsetRes(R.dimen.slidingmenu_offset);
+        slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+    }
 
 
 
@@ -136,14 +142,21 @@ public class MainActivity extends Activity implements View.OnClickListener{
             {
                 //todo设置相关,如发音人和发音情感
                 //账号设置,登出
-                Intent intent = new Intent(MainActivity.this,SettingActivity.class);
-                startActivity(intent);
+//                Intent intent = new Intent(MainActivity.this,SettingActivity.class);
+//                startActivity(intent);
+                if(!slidingMenu.isSecondaryMenuShowing()){
+                    slidingMenu.showSecondaryMenu();
+                }
+                else {
+                    slidingMenu.toggle();
+                }
 
                 break;
             }
             case R.id.help_btn:
             {
                 //todo帮助,如何使用语音助手进行学习
+                slidingMenu.toggle();
                 break;
             }
             default:
