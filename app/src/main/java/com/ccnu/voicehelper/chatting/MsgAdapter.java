@@ -1,4 +1,4 @@
-package com.ccnu.voicehelper;
+package com.ccnu.voicehelper.chatting;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,6 +7,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.ccnu.voicehelper.R;
+import com.ccnu.voicehelper.chatting.Msg;
 
 import java.util.List;
 

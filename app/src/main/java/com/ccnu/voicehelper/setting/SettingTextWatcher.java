@@ -1,4 +1,4 @@
-package com.ccnu.voicehelper;
+package com.ccnu.voicehelper.setting;
 
 import android.content.Context;
 import android.preference.EditTextPreference;

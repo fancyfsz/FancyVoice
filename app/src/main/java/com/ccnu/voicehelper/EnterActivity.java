@@ -1,6 +1,5 @@
 package com.ccnu.voicehelper;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -8,8 +7,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.ccnu.voicehelper.utils.ActivityCollector;
+import com.ccnu.voicehelper.utils.BaseActivity;
 
-public class EnterActivity extends Activity implements View.OnClickListener{
+
+public class EnterActivity extends BaseActivity implements View.OnClickListener{
 
     private EditText stuId = null;
     private EditText pwd = null;
@@ -18,6 +20,7 @@ public class EnterActivity extends Activity implements View.OnClickListener{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ActivityCollector.addActivity(this);
         setContentView(R.layout.login);
         initLayout();
     }
@@ -53,6 +56,9 @@ public class EnterActivity extends Activity implements View.OnClickListener{
         return true;
     }
 
-
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ActivityCollector.removeActivity(this);
+    }
 }

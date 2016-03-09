@@ -7,6 +7,13 @@
     <string name="hint_stuId">请输入学号</string>
     <string name="hint_pwd">请输入密码</string>
     <string name="login">登陆</string>
+    <string name="voicer">发音人</string>
+    <string name="motion">发音情感</string>
+    <string name="exit_account">退出账户</string>
+    <string name="instructions">该语音助手帮助刚刚踏入计算机科学的学生学习基本概念。比如向他/她提问:
+    指针和引用的区别是什么？c++学习推荐书籍? 你均会得到语音助手最耐心的讲解。
+    </string>
+    <string name="people">适用人群:想要了解计算机科学的初学者们</string>
     <string-array name="ise_language_entries">
         <item>英语</item>
         <item>汉语</item>

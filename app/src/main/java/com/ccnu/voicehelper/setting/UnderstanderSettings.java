@@ -1,10 +1,12 @@
-package com.ccnu.voicehelper;
+package com.ccnu.voicehelper.setting;
 
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.view.Window;
+
+import com.ccnu.voicehelper.R;
 
 /**
  * Created by mona on 16/3/5.

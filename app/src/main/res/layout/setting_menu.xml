@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--设置的菜单项-->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/lightblue"
+    >
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            ></View>
+        <TextView
+           android:id="@+id/choose_voicer"
+           android:text="@string/voicer"
+           android:textSize="35sp"
+           android:textColor="@color/white"
+           android:gravity="center"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/dividing_line">
+
+        </View>
+        <TextView
+            android:id="@+id/choose_motion"
+            android:text="@string/motion"
+            android:textSize="35sp"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/dividing_line">
+
+        </View>
+        <TextView
+            android:id="@+id/exit_account"
+            android:text="@string/exit_account"
+            android:textSize="35sp"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/dividing_line">
+
+        </View>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" >
+
+        </View>
+    </LinearLayout>
+
+</RelativeLayout>

@@ -1,4 +1,4 @@
-package com.ccnu.voicehelper;
+package com.ccnu.voicehelper.chatting;
 
 /**
  * Created by mona on 16/3/6.

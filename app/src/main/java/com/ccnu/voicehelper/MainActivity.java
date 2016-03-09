@@ -9,8 +9,15 @@ import android.view.View;
 import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ccnu.voicehelper.chatting.Msg;
+import com.ccnu.voicehelper.chatting.MsgAdapter;
+import com.ccnu.voicehelper.setting.TtsSettings;
+import com.ccnu.voicehelper.setting.UnderstanderSettings;
+import com.ccnu.voicehelper.utils.ActivityCollector;
+import com.ccnu.voicehelper.utils.BaseActivity;
 import com.iflytek.cloud.ErrorCode;
 import com.iflytek.cloud.InitListener;
 import com.iflytek.cloud.SpeechConstant;
@@ -30,7 +37,7 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends Activity implements View.OnClickListener{
+public class MainActivity extends BaseActivity implements View.OnClickListener{
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -65,6 +72,14 @@ public class MainActivity extends Activity implements View.OnClickListener{
     private String voicer = "xiaoyan";
     private SharedPreferences ttsSpf;
 
+    /**
+     * 语音设置相关,如选择发音人,选择发音情感
+     * 以及退出账号
+     */
+    private TextView choose_voicer = null;
+    private TextView choose_motion = null;
+    private TextView exit_account = null;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
@@ -72,6 +87,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
         SpeechUtility.createUtility(MainActivity.this, "appid=" + getString(R.string.app_id));
 
         super.onCreate(savedInstanceState);
+        ActivityCollector.addActivity(this);
         //隐藏标题栏
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         //加载布局
@@ -91,6 +107,9 @@ public class MainActivity extends Activity implements View.OnClickListener{
         findViewById(R.id.voice_btn).setOnClickListener(MainActivity.this);
         findViewById(R.id.help_btn).setOnClickListener(MainActivity.this);
         findViewById(R.id.setting_btn).setOnClickListener(MainActivity.this);
+        findViewById(R.id.choose_voicer).setOnClickListener(MainActivity.this);
+        findViewById(R.id.choose_motion).setOnClickListener(MainActivity.this);
+        findViewById(R.id.exit_account).setOnClickListener(MainActivity.this);
         understanderSpf = getSharedPreferences(UnderstanderSettings.PREFER_NAME, Activity.MODE_PRIVATE);
         ttsSpf = getSharedPreferences(TtsSettings.PREFER_NAME, Activity.MODE_PRIVATE);
     }
@@ -101,8 +120,8 @@ public class MainActivity extends Activity implements View.OnClickListener{
         slidingMenu = new SlidingMenu(this);
         //设置菜单模式
         slidingMenu.setMode(SlidingMenu.LEFT_RIGHT);
-        slidingMenu.setMenu(R.layout.help_fragment);
-        slidingMenu.setSecondaryMenu(R.layout.setting_fragment);
+        slidingMenu.setMenu(R.layout.help_menu);
+        slidingMenu.setSecondaryMenu(R.layout.setting_menu);
         slidingMenu.attachToActivity(this,SlidingMenu.SLIDING_CONTENT);
         slidingMenu.setShadowWidth(10);
         slidingMenu.setShadowWidthRes(R.dimen.shadow_width);
@@ -142,8 +161,6 @@ public class MainActivity extends Activity implements View.OnClickListener{
             {
                 //todo设置相关,如发音人和发音情感
                 //账号设置,登出
-//                Intent intent = new Intent(MainActivity.this,SettingActivity.class);
-//                startActivity(intent);
                 if(!slidingMenu.isSecondaryMenuShowing()){
                     slidingMenu.showSecondaryMenu();
                 }
@@ -157,6 +174,21 @@ public class MainActivity extends Activity implements View.OnClickListener{
             {
                 //todo帮助,如何使用语音助手进行学习
                 slidingMenu.toggle();
+                break;
+            }
+            case R.id.choose_voicer:
+            {
+                showTip("请选择发音人");
+                break;
+            }
+            case R.id.choose_motion:
+            {
+                showTip("请选择情感");
+                break;
+            }
+            case R.id.exit_account:
+            {
+                ActivityCollector.finishAll();
                 break;
             }
             default:
@@ -377,6 +409,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
         speechUnderstander.destroy();
         tts.stopSpeaking();
         tts.destroy();
+        ActivityCollector.removeActivity(this);
     }
 
     private void showTip(final String str) {
