@@ -165,7 +165,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
                 else {
                     ret = speechUnderstander.startUnderstanding(speechUnderstanderListener);//设置对语音的监听
                     if(ret != 0){
-                        showTip("语义理解失败,错误码:"+ret);
+                        showTip(getString(R.string.notition));
                     }
                     else {
                         showTip(getString(R.string.text_begin));
@@ -229,7 +229,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         dialog.setPositiveButton("确认", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
+                slidingMenu.toggle();
             }
         });
         dialog.setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -256,7 +256,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         dialog.setPositiveButton("确认", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
+                slidingMenu.toggle();
             }
         });
         dialog.setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -474,6 +474,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         MsgAdapter msgAdapter = new MsgAdapter(MainActivity.this,R.layout.msg_item,msgList);
         ListView msgListView = (ListView)findViewById(R.id.msg_list_view);
         msgListView.setAdapter(msgAdapter);
+        msgListView.setSelection(msgListView.getCount()-1);
     }
 
     @Override

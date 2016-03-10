@@ -7,6 +7,7 @@
     <string name="hint_stuId">请输入学号</string>
     <string name="hint_pwd">请输入密码</string>
     <string name="login">登陆</string>
+    <string name="notition">请先到应用市场下载语记</string>
     <string name="voicer">发音人</string>
     <string name="motion">发音情感</string>
     <string name="choose_voicer">请选择发音人</string>
