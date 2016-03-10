@@ -139,9 +139,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
             //开始语音理解
             case R.id.voice_btn:
             {
-                Toast.makeText(MainActivity.this,"开始说话",Toast.LENGTH_LONG).show();
                 //设置相关参数
                 setVoiceParams();
+                if(tts.isSpeaking()){
+                    tts.stopSpeaking();
+                }
                 if(speechUnderstander.isUnderstanding()){
                     speechUnderstander.stopUnderstanding();
                     showTip("停止录音");
