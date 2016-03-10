@@ -218,7 +218,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
         dialog.setTitle(getString(R.string.choose_voicer));
         //单选框设置
-        dialog.setSingleChoiceItems(items, selectedMotionId , new DialogInterface.OnClickListener() {
+        dialog.setSingleChoiceItems(items, selectedVoicerId , new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 voicer = voicersValues[which];
