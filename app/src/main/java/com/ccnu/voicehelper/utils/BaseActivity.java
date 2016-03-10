@@ -8,9 +8,15 @@ import android.util.Log;
  * Created by mona on 16/3/9.
  */
 public class BaseActivity extends Activity{
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("BaseActivity",getClass().getSimpleName());
+        Log.d("BaseActivity",getClass().getSimpleName()+" onCreate");
+    }
+
+    protected void onDestroy(){
+        super.onDestroy();
+        Log.d("BaseActivity",getClass().getSimpleName()+" onDestroy");
     }
 }

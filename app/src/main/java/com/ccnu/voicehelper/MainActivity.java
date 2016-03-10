@@ -1,6 +1,8 @@
 package com.ccnu.voicehelper;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
@@ -71,7 +73,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
     //默认发音人小燕
     private String voicer = "xiaoyan";
     private SharedPreferences ttsSpf;
-
+    //默认情感正常
+    private String motion = "neutral";
     /**
      * 语音设置相关,如选择发音人,选择发音情感
      * 以及退出账号
@@ -79,6 +82,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
     private TextView choose_voicer = null;
     private TextView choose_motion = null;
     private TextView exit_account = null;
+    //发音人
+    private  String[] voicersEntries;
+    private  String[] voicersValues;
+    //发音情感
+    private  String[] motionEntries;
+    private  String[] motionValues;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -112,6 +122,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         findViewById(R.id.exit_account).setOnClickListener(MainActivity.this);
         understanderSpf = getSharedPreferences(UnderstanderSettings.PREFER_NAME, Activity.MODE_PRIVATE);
         ttsSpf = getSharedPreferences(TtsSettings.PREFER_NAME, Activity.MODE_PRIVATE);
+        voicersEntries = getResources().getStringArray(R.array.voicer_cloud_entries);
+        voicersValues = getResources().getStringArray(R.array.voicer_cloud_values);
+        motionEntries = getResources().getStringArray(R.array.motion_cloud_entries);
+        motionValues = getResources().getStringArray(R.array.motion_cloud_values);
     }
 
     //初始化侧边栏(点击设置按钮出现的滑动侧边栏效果)
@@ -122,7 +136,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         slidingMenu.setMode(SlidingMenu.LEFT_RIGHT);
         slidingMenu.setMenu(R.layout.help_menu);
         slidingMenu.setSecondaryMenu(R.layout.setting_menu);
-        slidingMenu.attachToActivity(this,SlidingMenu.SLIDING_CONTENT);
+        slidingMenu.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
         slidingMenu.setShadowWidth(10);
         slidingMenu.setShadowWidthRes(R.dimen.shadow_width);
         slidingMenu.setBehindOffsetRes(R.dimen.slidingmenu_offset);
@@ -180,12 +194,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
             }
             case R.id.choose_voicer:
             {
-                showTip("请选择发音人");
+                createVoicersDialog(voicersEntries);
                 break;
             }
             case R.id.choose_motion:
             {
-                showTip("请选择情感");
+                createMotionDialog(motionEntries);
                 break;
             }
             case R.id.exit_account:
@@ -196,6 +210,62 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
             default:
                 break;
         }
+    }
+
+    private int selectedVoicerId = 0;//默认选中第一项
+    //选择发音人的对话框
+    protected void createVoicersDialog(final String[] items){
+        AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
+        dialog.setTitle(getString(R.string.choose_voicer));
+        //单选框设置
+        dialog.setSingleChoiceItems(items, selectedMotionId , new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                voicer = voicersValues[which];
+                selectedVoicerId = which;
+            }
+        });
+
+        dialog.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        dialog.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                  selectedVoicerId = 0;
+            }
+        });
+        dialog.show();
+    }
+
+    private int selectedMotionId = 0;//默认选中第一项
+    //选择情感的对话框
+    protected void createMotionDialog(final String[] items){
+         AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
+         dialog.setTitle(getString(R.string.choose_motion));
+         dialog.setSingleChoiceItems(items, selectedMotionId, new DialogInterface.OnClickListener() {
+             @Override
+             public void onClick(DialogInterface dialog, int which) {
+                 motion = motionValues[which];
+                 selectedMotionId = which;
+             }
+         });
+        dialog.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        dialog.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                 selectedMotionId = 0;
+            }
+        });
+        dialog.show();
     }
 
     //设置语音相关参数
@@ -235,6 +305,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
     //设置合成相关参数
     private void setTtsParams(){
         tts.setParameter(SpeechConstant.PARAMS,null);
+        //引擎类型设置为云端;设置成本地的话无法设置语速,音量和音调
+        tts.setParameter(SpeechConstant.ENGINE_TYPE, SpeechConstant.TYPE_CLOUD);
         //设置合成发音人
         tts.setParameter(SpeechConstant.VOICE_NAME,voicer);
         //设置合成语速
