@@ -334,7 +334,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
 
                 //得到xml解析结果
                 xmlString = result.getResultString();
-                Log.i(TAG, xmlString);
+                Log.i("helloworld", xmlString);
                 parseXmlWithPull(xmlString);
                 //将文本以聊天界面的样式进行显示
                 showChatting();
