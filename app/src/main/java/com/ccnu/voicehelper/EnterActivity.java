@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import com.ccnu.voicehelper.utils.ActivityCollector;
 import com.ccnu.voicehelper.utils.BaseActivity;
+import com.ccnu.voicehelper.utils.NetworkHelper;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -24,8 +25,8 @@ public class EnterActivity extends BaseActivity implements View.OnClickListener{
     private Button login_btn = null;
     private String stuNum = null;//学号
     private String password = null;//密码
-    private String url= "http://10.146.80.73:8080/VoiceStudyManage/user/checkStudentLogin.action";
     private String jsonString = null;
+    User user = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,18 +54,19 @@ public class EnterActivity extends BaseActivity implements View.OnClickListener{
                 password = pwd.getText().toString();
 
                 RequestParams params = new RequestParams();
-
+                NetworkHelper networkHelper = new NetworkHelper();
                 params.put("userNo", stuNum);
                 params.put("userPsd",password);
 
                 AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
-                asyncHttpClient.post(url, params, new AsyncHttpResponseHandler() {
+                asyncHttpClient.post(networkHelper.getLoginUrl(), params, new AsyncHttpResponseHandler() {
                     @Override
                     public void onSuccess(int i, Header[] headers, byte[] bytes) {
                         jsonString = new String(bytes);
 
                         if(parseJson()){
                             Intent intent = new Intent(EnterActivity.this,MainActivity.class);
+                            intent.putExtra("stuNo",user.getStuNo());
                             startActivity(intent);
                         }
                         else {
@@ -98,6 +100,8 @@ public class EnterActivity extends BaseActivity implements View.OnClickListener{
             String res = jsonString.toString();
             if( !res.contains("errorCode")){
                 JSONObject object = jsonObject.getJSONObject("data");
+                user = new User();
+                user.setStuNo(object.getString("userNo"));
                 bRet = true;
             }
 

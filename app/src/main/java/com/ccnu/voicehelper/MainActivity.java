@@ -3,6 +3,7 @@ package com.ccnu.voicehelper;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
@@ -20,6 +21,7 @@ import com.ccnu.voicehelper.setting.TtsSettings;
 import com.ccnu.voicehelper.setting.UnderstanderSettings;
 import com.ccnu.voicehelper.utils.ActivityCollector;
 import com.ccnu.voicehelper.utils.BaseActivity;
+import com.ccnu.voicehelper.utils.NetworkHelper;
 import com.iflytek.cloud.ErrorCode;
 import com.iflytek.cloud.InitListener;
 import com.iflytek.cloud.SpeechConstant;
@@ -31,7 +33,11 @@ import com.iflytek.cloud.SpeechUtility;
 import com.iflytek.cloud.SynthesizerListener;
 import com.iflytek.cloud.UnderstanderResult;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 
+import org.apache.http.Header;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
@@ -88,7 +94,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
     //发音情感
     private  String[] motionEntries;
     private  String[] motionValues;
-
+    private String stuNo;//学生学号
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -108,7 +114,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         speechUnderstander = SpeechUnderstander.createUnderstander(MainActivity.this, speechUdrInitListener);
         tts = SpeechSynthesizer.createSynthesizer(MainActivity.this, ttsInitListener);
         toast = toast.makeText(MainActivity.this, "", Toast.LENGTH_SHORT);
-
+        Intent intent = getIntent();
+        stuNo = intent.getStringExtra("stuNo");
     }
 
     //初始化Layout
@@ -334,8 +341,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
 
                 //得到xml解析结果
                 xmlString = result.getResultString();
-                Log.i("helloworld", xmlString);
                 parseXmlWithPull(xmlString);
+                //将本次的问答传到服务器
+                sendStudyRecord();
                 //将文本以聊天界面的样式进行显示
                 showChatting();
 
@@ -474,7 +482,29 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         MsgAdapter msgAdapter = new MsgAdapter(MainActivity.this,R.layout.msg_item,msgList);
         ListView msgListView = (ListView)findViewById(R.id.msg_list_view);
         msgListView.setAdapter(msgAdapter);
-        msgListView.setSelection(msgListView.getCount()-1);
+        msgListView.setSelection(msgListView.getCount() - 1);
+    }
+
+    public void sendStudyRecord(){
+
+        RequestParams params = new RequestParams();
+        NetworkHelper networkHelper = new NetworkHelper();
+        params.put("userNo", stuNo);
+        params.put("question",rawText);
+        params.put("answer",content);
+
+        AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
+        asyncHttpClient.post(networkHelper.getInsertUrl(), params, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int i, Header[] headers, byte[] bytes) {
+
+            }
+
+            @Override
+            public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
+
+            }
+        });
     }
 
     @Override
@@ -491,4 +521,5 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         toast.setText(str);
         toast.show();
     }
+
 }
