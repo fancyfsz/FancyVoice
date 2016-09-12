@@ -4,24 +4,21 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-
+    android:layout_height="match_parent"
+    >
     <ListView
            android:id="@+id/msg_list_view"
            android:layout_width="match_parent"
            android:layout_height="0dp"
            android:layout_weight="1"
            android:divider="#0000"
+           android:background="@color/grey"
            >
     </ListView>
-
-
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
         >
         <ImageButton
             android:id="@+id/help_btn"
@@ -38,7 +35,8 @@
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent" />
+            android:background="@android:color/transparent"
+            />
         <ImageButton
             android:id="@+id/setting_btn"
             android:src="@drawable/setting_btn"
@@ -49,6 +47,4 @@
             android:background="@android:color/transparent"
             />
     </LinearLayout>
-
-
 </LinearLayout>

@@ -10,4 +10,6 @@
     <color name="blue">#0000ff</color>
     <color name="lightblue">#5CACEE</color>
     <color name="darkgreen">#a5c54e</color>
+    <color name="grey">#eee</color>
+
 </resources>
