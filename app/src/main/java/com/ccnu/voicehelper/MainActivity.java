@@ -40,25 +40,23 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends BaseActivity implements View.OnClickListener{
+public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private ImageButton help_btn = null;
     private ImageButton voice_btn = null;
     private ImageButton setting_btn = null;
-    private List<Msg> msgList = new ArrayList<Msg>();
+    private List<Msg> msgList = new ArrayList<>();
     private SlidingMenu slidingMenu;
     /*
-      *  module one:a speech recognizer(ASR)
-      *  module two: natural language understanding
-      *  (recognition into a concept structure)
-    */
+     *  module one:a speech recognizer(ASR)
+     *  module two: natural language understanding
+     *  (recognition into a concept structure)
+     */
     //语义理解对象(从语音到语义)
     private SpeechUnderstander speechUnderstander;
     private Toast toast;
-    //理解的结果,这里是用xml表示的
-    private String xmlString;
     //sendMessage
     private String rawText;
     //receiveMessage
@@ -66,9 +64,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
     private SharedPreferences understanderSpf;
 
     /*
-    *   module three: text-to-speech
-    *   (TTS语音合成)
-    * */
+     *   module three: text-to-speech
+     *   (TTS语音合成)
+     * */
     //语音合成对象
     private SpeechSynthesizer tts;
     //默认发音人小燕
@@ -84,12 +82,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
     private TextView choose_motion = null;
     private TextView exit_account = null;
     //发音人
-    private  String[] voicersEntries;
-    private  String[] voicersValues;
+    private String[] voicersEntries;
+    private String[] voicersValues;
     //发音情感
-    private  String[] motionEntries;
-    private  String[] motionValues;
-    private String stuNo;//学生学号
+    private String[] motionEntries;
+    private String[] motionValues;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -108,13 +105,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         //初始化对象
         speechUnderstander = SpeechUnderstander.createUnderstander(MainActivity.this, speechUdrInitListener);
         tts = SpeechSynthesizer.createSynthesizer(MainActivity.this, ttsInitListener);
-        toast = toast.makeText(MainActivity.this, "", Toast.LENGTH_SHORT);
-        Intent intent = getIntent();
-        stuNo = intent.getStringExtra("stuNo");
+        toast = Toast.makeText(MainActivity.this, "", Toast.LENGTH_SHORT);
     }
 
     //初始化Layout
-    public void initLayout(){
+    public void initLayout() {
 
         findViewById(R.id.voice_btn).setOnClickListener(MainActivity.this);
         findViewById(R.id.help_btn).setOnClickListener(MainActivity.this);
@@ -146,66 +141,56 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
     }
 
 
-
     @Override
     public void onClick(View v) {
 
         int ret = 0;//函数调用的返回值
-        switch (v.getId()){
+        switch (v.getId()) {
             //开始语音理解
-            case R.id.voice_btn:
-            {
+            case R.id.voice_btn: {
                 //设置相关参数
                 setVoiceParams();
-                if(tts.isSpeaking()){
+                if (tts.isSpeaking()) {
                     tts.stopSpeaking();
                 }
-                if(speechUnderstander.isUnderstanding()){
+                if (speechUnderstander.isUnderstanding()) {
                     speechUnderstander.stopUnderstanding();
-                    showTip("停止录音");
-                }
-                else {
+                    showTip(getString(R.string.stop_record));
+                } else {
                     ret = speechUnderstander.startUnderstanding(speechUnderstanderListener);//设置对语音的监听
-                    if(ret != 0){
+                    if (ret != 0) {
                         showTip(getString(R.string.notition));
-                    }
-                    else {
+                    } else {
                         showTip(getString(R.string.text_begin));
                     }
                 }
                 break;
             }
-            case R.id.setting_btn:
-            {
+            case R.id.setting_btn: {
                 //todo设置相关,如发音人和发音情感
                 //账号设置,登出
-                if(!slidingMenu.isSecondaryMenuShowing()){
+                if (!slidingMenu.isSecondaryMenuShowing()) {
                     slidingMenu.showSecondaryMenu();
-                }
-                else {
+                } else {
                     slidingMenu.toggle();
                 }
 
                 break;
             }
-            case R.id.help_btn:
-            {
+            case R.id.help_btn: {
                 //todo帮助,如何使用语音助手进行学习
                 slidingMenu.toggle();
                 break;
             }
-            case R.id.choose_voicer:
-            {
+            case R.id.choose_voicer: {
                 createVoicersDialog(voicersEntries);
                 break;
             }
-            case R.id.choose_motion:
-            {
+            case R.id.choose_motion: {
                 createMotionDialog(motionEntries);
                 break;
             }
-            case R.id.exit_account:
-            {
+            case R.id.exit_account: {
                 ActivityCollector.finishAll();
                 break;
             }
@@ -215,12 +200,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
     }
 
     private int selectedVoicerId = 0;//默认选中第一项
+
     //选择发音人的对话框
-    protected void createVoicersDialog(final String[] items){
+    protected void createVoicersDialog(final String[] items) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
         dialog.setTitle(getString(R.string.choose_voicer));
         //单选框设置
-        dialog.setSingleChoiceItems(items, selectedVoicerId , new DialogInterface.OnClickListener() {
+        dialog.setSingleChoiceItems(items, selectedVoicerId, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 voicer = voicersValues[which];
@@ -237,24 +223,25 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         dialog.setNegativeButton("取消", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                  selectedVoicerId = 0;
+                selectedVoicerId = 0;
             }
         });
         dialog.show();
     }
 
     private int selectedMotionId = 0;//默认选中第一项
+
     //选择情感的对话框
-    protected void createMotionDialog(final String[] items){
-         AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
-         dialog.setTitle(getString(R.string.choose_motion));
-         dialog.setSingleChoiceItems(items, selectedMotionId, new DialogInterface.OnClickListener() {
-             @Override
-             public void onClick(DialogInterface dialog, int which) {
-                 motion = motionValues[which];
-                 selectedMotionId = which;
-             }
-         });
+    protected void createMotionDialog(final String[] items) {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
+        dialog.setTitle(getString(R.string.choose_motion));
+        dialog.setSingleChoiceItems(items, selectedMotionId, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                motion = motionValues[which];
+                selectedMotionId = which;
+            }
+        });
         dialog.setPositiveButton("确认", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -264,22 +251,21 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         dialog.setNegativeButton("取消", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                 selectedMotionId = 0;
+                selectedMotionId = 0;
             }
         });
         dialog.show();
     }
 
     //设置语音相关参数
-    public void setVoiceParams(){
+    public void setVoiceParams() {
         //对语言的设置
-        String lang = understanderSpf.getString("understander_language_preference","mandarin");
-        if(lang.equals("en_us")){
-            speechUnderstander.setParameter(SpeechConstant.LANGUAGE,"en_us");
-        }
-        else {
-            speechUnderstander.setParameter(SpeechConstant.LANGUAGE,"zh_cn");
-            speechUnderstander.setParameter(SpeechConstant.ACCENT,lang);
+        String lang = understanderSpf.getString("understander_language_preference", "mandarin");
+        if (lang.equals("en_us")) {
+            speechUnderstander.setParameter(SpeechConstant.LANGUAGE, "en_us");
+        } else {
+            speechUnderstander.setParameter(SpeechConstant.LANGUAGE, "zh_cn");
+            speechUnderstander.setParameter(SpeechConstant.ACCENT, lang);
         }
         //设置语音前端点
         speechUnderstander.setParameter(SpeechConstant.VAD_BOS, understanderSpf.getString("understander_vadbos_preference", "4000"));
@@ -291,41 +277,43 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         // 设置音频保存路径，保存音频格式支持pcm、wav，设置路径为sd卡请注意WRITE_EXTERNAL_STORAGE权限
         // 注：AUDIO_FORMAT参数语记需要更新版本才能生效
         speechUnderstander.setParameter(SpeechConstant.AUDIO_FORMAT, "wav");
-        speechUnderstander.setParameter(SpeechConstant.ASR_AUDIO_PATH, Environment.getExternalStorageDirectory()+"/msc/sud.wav");
+        speechUnderstander.setParameter(SpeechConstant.ASR_AUDIO_PATH, Environment.getExternalStorageDirectory() + "/msc/sud.wav");
     }
+
     //初始化从语音到语义的监听器
     private InitListener speechUdrInitListener = new InitListener() {
         @Override
         public void onInit(int code) {
-            Log.d(TAG,"speechUdrInitListener init() code ="+code);
-            if(code != ErrorCode.SUCCESS){
-                showTip("初始化失败,错误码:"+code);
+            Log.d(TAG, "speechUdrInitListener init() code =" + code);
+            if (code != ErrorCode.SUCCESS) {
+                showTip("初始化失败,错误码:" + code);
             }
         }
     };
 
     //设置合成相关参数
-    private void setTtsParams(){
-        tts.setParameter(SpeechConstant.PARAMS,null);
+    private void setTtsParams() {
+        tts.setParameter(SpeechConstant.PARAMS, null);
         //引擎类型设置为云端;设置成本地的话无法设置语速,音量和音调
         tts.setParameter(SpeechConstant.ENGINE_TYPE, SpeechConstant.TYPE_CLOUD);
         //设置合成发音人
-        tts.setParameter(SpeechConstant.VOICE_NAME,voicer);
+        tts.setParameter(SpeechConstant.VOICE_NAME, voicer);
         //设置合成语速
-        tts.setParameter(SpeechConstant.SPEED,ttsSpf.getString("speed_preference","50"));
+        tts.setParameter(SpeechConstant.SPEED, ttsSpf.getString("speed_preference", "50"));
         //设置合成音量
-        tts.setParameter(SpeechConstant.VOLUME,ttsSpf.getString("volumn_preference","50"));
+        tts.setParameter(SpeechConstant.VOLUME, ttsSpf.getString("volumn_preference", "50"));
         //设置合成音调
-        tts.setParameter(SpeechConstant.PITCH,ttsSpf.getString("pitch_preference","50"));
+        tts.setParameter(SpeechConstant.PITCH, ttsSpf.getString("pitch_preference", "50"));
         //设置播放器音频流类型
-        tts.setParameter(SpeechConstant.STREAM_TYPE,ttsSpf.getString("stream_preference","3"));
+        tts.setParameter(SpeechConstant.STREAM_TYPE, ttsSpf.getString("stream_preference", "3"));
         //设置播放合成音频打断音乐播放,默认为true
-        tts.setParameter(SpeechConstant.KEY_REQUEST_FOCUS,"true");
-        tts.setParameter(SpeechConstant.AUDIO_FORMAT,"wav");
+        tts.setParameter(SpeechConstant.KEY_REQUEST_FOCUS, "true");
+        tts.setParameter(SpeechConstant.AUDIO_FORMAT, "wav");
         //设置音频保存路径
-        tts.setParameter(SpeechConstant.TTS_AUDIO_PATH,Environment.getExternalStorageDirectory()+"/msc/tts.wav");
+        tts.setParameter(SpeechConstant.TTS_AUDIO_PATH, Environment.getExternalStorageDirectory() + "/msc/tts.wav");
 
     }
+
     //语义理解回调
     private SpeechUnderstanderListener speechUnderstanderListener = new SpeechUnderstanderListener() {
 
@@ -335,7 +323,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
                 Log.d(TAG, result.getResultString());
 
                 //得到xml解析结果
-                xmlString = result.getResultString();
+                //理解的结果,这里是用xml表示的
+                String xmlString = result.getResultString();
                 parseXmlWithPull(xmlString);
                 //将文本以聊天界面的样式进行显示
                 showChatting();
@@ -348,7 +337,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         @Override
         public void onVolumeChanged(int volume, byte[] data) {
             showTip("当前正在说话，音量大小：" + volume);
-            Log.d(TAG, data.length+"");
+            Log.d(TAG, data.length + "");
         }
 
         @Override
@@ -383,10 +372,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         @Override
         public void onInit(int code) {
             Log.d(TAG, "ttsInitListener init() code = " + code);
-            if(code != ErrorCode.SUCCESS){
-                showTip("初始化失败,错误码:"+code);
-            }
-            else{
+            if (code != ErrorCode.SUCCESS) {
+                showTip("初始化失败,错误码:" + code);
+            } else {
                 //初始化成功可以调用startSpeaking方法了
             }
         }
@@ -431,7 +419,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
     };
 
     //使用Pull方式解析得到的xml
-    private void parseXmlWithPull(String xmlString){
+    private void parseXmlWithPull(String xmlString) {
         //将<rawtext>标签作为发出的消息
         //将<content>标签作为语音助手的应答消息,再利用语音合成技术进行发音
         try {
@@ -439,41 +427,33 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
             XmlPullParser xmlPullParser = factory.newPullParser();
             xmlPullParser.setInput(new StringReader(xmlString));
             int eventType = xmlPullParser.getEventType();
-            while (eventType != XmlPullParser.END_DOCUMENT){
+            while (eventType != XmlPullParser.END_DOCUMENT) {
                 String nodeName = xmlPullParser.getName();
-                switch (eventType){
-                    //开始解析某一个节点
-                    case XmlPullParser.START_TAG: {
-                        if ("rawtext".equals(nodeName)) {
-                            rawText = xmlPullParser.nextText();
-                        }
-                        else if("content".equals(nodeName)) {
-                            content = xmlPullParser.nextText();
-                        }
-                        break;
+                //开始解析某一个节点
+                if (eventType == XmlPullParser.START_TAG) {
+                    if ("rawtext".equals(nodeName)) {
+                        rawText = xmlPullParser.nextText();
+                    } else if ("content".equals(nodeName)) {
+                        content = xmlPullParser.nextText();
                     }
-                    default:
-                        break;
-
                 }
                 eventType = xmlPullParser.next();
             }
-        }
-        catch (Exception e){
-           e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         setTtsParams();
-        tts.startSpeaking(content,ttsListener);
+        tts.startSpeaking(content, ttsListener);
     }
 
-    public void showChatting(){
+    public void showChatting() {
 
-        Msg sendMsg = new Msg(rawText,Msg.TYPE_SENT);
+        Msg sendMsg = new Msg(rawText, Msg.TYPE_SENT);
         msgList.add(sendMsg);
-        Msg receiveMsg = new Msg(content,Msg.TYPE_RECEIVED);
+        Msg receiveMsg = new Msg(content, Msg.TYPE_RECEIVED);
         msgList.add(receiveMsg);
-        MsgAdapter msgAdapter = new MsgAdapter(MainActivity.this,R.layout.msg_item,msgList);
-        ListView msgListView = (ListView)findViewById(R.id.msg_list_view);
+        MsgAdapter msgAdapter = new MsgAdapter(MainActivity.this, R.layout.msg_item, msgList);
+        ListView msgListView = (ListView) findViewById(R.id.msg_list_view);
         msgListView.setAdapter(msgAdapter);
         msgListView.setSelection(msgListView.getCount() - 1);
     }

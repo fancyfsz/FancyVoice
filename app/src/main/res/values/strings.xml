@@ -7,6 +7,7 @@
     <string name="hint_userId">请输入用户名</string>
     <string name="hint_pwd">请输入密码</string>
     <string name="login">登陆</string>
+    <string name="stop_record">停止录音</string>
     <string name="notition">请先到应用市场下载语记</string>
     <string name="voicer">发音人</string>
     <string name="motion">发音情感</string>
