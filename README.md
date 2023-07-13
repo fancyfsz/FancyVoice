@@ -8,5 +8,5 @@
 AlertDialog的单选框效果。 
 侧边栏效果的实现是将SlidingMenu的库作为module集成到VoiceHelper中。  
 由于使用了语音合成的功能;需要安装科大讯飞应用语记才能进行语音交互。
-  
 
+本项目不再维护，仅供参考学习。
